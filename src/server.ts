@@ -1,9 +1,8 @@
 import app from "./app.js";
-import prisma from "./config/prisma.js";
-const PORT = process.env.PORT || 5000;
+import config from "./config/environment.js";
 
-
-prisma.todo.findMany().then(console.log);
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`🚀 Server is running on port ${config.port}`);
+  console.log(`📝 Environment: ${config.nodeEnv}`);
+  console.log(`📚 Swagger Documentation: http://localhost:${config.port}/api-docs`);
 });
