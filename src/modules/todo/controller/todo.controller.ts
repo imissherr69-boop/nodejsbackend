@@ -1,32 +1,37 @@
-import type { Request, Response } from "express";
+import { apiResponse } from "../../../utils/apiResponse.js";
+import { StatusCodes } from "http-status-codes";
 import { TodoService } from "../service/todo.service.js";
 
 export class TodoController {
-  static async getAll(req: Request, res: Response) {
+  static async getAll(req: any, res: any) {
     const todos = await TodoService.getAllTodos(req.query);
-    res.json(todos);
+    res.status(StatusCodes.OK).json(apiResponse.success(todos));
   }
 
-  static async getById(req: Request, res: Response) {
-    const id = req.params.id as string;
-    const todo = await TodoService.getTodoById(id);
-    res.json(todo);
+  static async getById(req: any, res: any) {
+    const todo = await TodoService.getTodoById(req.params.id);
+
+    if (!todo) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json(apiResponse.error("Todo not found"));
+    }
+
+    res.json(apiResponse.success(todo));
   }
 
-  static async create(req: Request, res: Response) {
+  static async create(req: any, res: any) {
     const todo = await TodoService.createTodo(req.body);
-    res.status(201).json(todo);
+    res.status(StatusCodes.CREATED).json(apiResponse.success(todo));
   }
 
-  static async update(req: Request, res: Response) {
-    const id = req.params.id as string;
-    const todo = await TodoService.updateTodo(id, req.body);
-    res.json(todo);
+  static async update(req: any, res: any) {
+    const todo = await TodoService.updateTodo(req.params.id, req.body);
+    res.json(apiResponse.success(todo));
   }
 
-  static async delete(req: Request, res: Response) {
-    const id = req.params.id as string;
-    const result = await TodoService.deleteTodo(id);
-    res.json({ message: "Deleted successfully", result });
+  static async delete(req: any, res: any) {
+    await TodoService.deleteTodo(req.params.id);
+    res.json(apiResponse.success(null, "Deleted successfully"));
   }
 }
