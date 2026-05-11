@@ -1,12 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import config from "../config/environment.js";
-
-const swaggerServerUrl =
-  process.env.SWAGGER_SERVER_URL ||
-  (config.isProduction
-    ? "https://nodejsbackend-production-cc64.up.railway.app"
-    : `http://localhost:${config.port}`);
 
 const options = {
   definition: {
@@ -18,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: swaggerServerUrl,
+        url: "/",
       },
     ],
   },
